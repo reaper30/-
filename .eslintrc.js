@@ -15,11 +15,11 @@ module.exports = {
   rules: {
     semi: [2, "always"],
     indent: [0, 4],
+    "spaced-comment": "off",
     "space-before-function-paren": [
       "error",
       { anonymous: "always", named: "never" }
     ],
-    "spaced-comment": "off",
     "multiline-ternary": ["off"],
     quotes: [
       "error",

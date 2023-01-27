@@ -33,6 +33,7 @@ const SelectField = ({
         name={name}
         value={value}
         onChange={handleChange}
+        key={options.value}
       >
         <option disabled value="">
           {defaultOption}
