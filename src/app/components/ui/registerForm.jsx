@@ -5,36 +5,34 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
-import { useQualities } from "../../hooks/useQualities";
-import { useProfessions } from "../../hooks/useProfession";
 import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getQualities } from "../../store/qualities";
+import { getProfessions } from "../../store/professions";
 
 const RegisterForm = () => {
   const history = useHistory();
-
   const [data, setData] = useState({
     email: "",
     password: "",
     profession: "",
     sex: "male",
+    name: "",
     qualities: [],
     licence: false
   });
-
   const { signUp } = useAuth();
-  const { qualities } = useQualities();
+  const qualities = useSelector(getQualities());
   const qualitiesList = qualities.map((q) => ({
     label: q.name,
     value: q._id
   }));
-
-  const { professions } = useProfessions();
-  const professionList = professions.map((p) => ({
+  const professions = useSelector(getProfessions());
+  const professionsList = professions.map((p) => ({
     label: p.name,
     value: p._id
   }));
-
   const [errors, setErrors] = useState({});
 
   const handleChange = (target) => {
@@ -50,6 +48,15 @@ const RegisterForm = () => {
       },
       isEmail: {
         message: "Email введен некорректно"
+      }
+    },
+    name: {
+      isRequired: {
+        message: "Имя обязательно для заполнения"
+      },
+      min: {
+        message: "Имя должно состоять минимум из 3 символов",
+        value: 3
       }
     },
     password: {
@@ -93,14 +100,16 @@ const RegisterForm = () => {
     e.preventDefault();
     const isValid = validate();
     if (!isValid) return;
-    const newData = { ...data, qualities: data.qualities.map((q) => q.value) };
+    const newData = {
+      ...data,
+      qualities: data.qualities.map((q) => q.value)
+    };
 
     try {
       await signUp(newData);
+      history.push("/");
     } catch (error) {
       setErrors(error);
-      console.log(error.email);
-      history.push("/");
     }
   };
 
@@ -114,6 +123,13 @@ const RegisterForm = () => {
         error={errors.email}
       />
       <TextField
+        label="Имя"
+        name="name"
+        value={data.name}
+        onChange={handleChange}
+        error={errors.name}
+      />
+      <TextField
         label="Пароль"
         type="password"
         name="password"
@@ -124,7 +140,7 @@ const RegisterForm = () => {
       <SelectField
         label="Выбери свою профессию"
         defaultOption="Choose..."
-        options={professionList}
+        options={professionsList}
         name="profession"
         onChange={handleChange}
         value={data.profession}
