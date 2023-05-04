@@ -32,7 +32,7 @@ const Comment = ({
                     {user && user.name}{" "}
                     <span className="small">- {displayDate(created)}</span>
                   </p>
-                  {currentUserId === userId && (
+                  {currentUserId.userId === userId && (
                     <button
                       className="btn btn-sm text-primary d-flex align-items-center"
                       onClick={() => onRemove(id)}

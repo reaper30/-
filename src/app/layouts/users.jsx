@@ -9,9 +9,7 @@ import { useSelector } from "react-redux";
 const Users = () => {
   const params = useParams();
   const { userId, edit } = params;
-  console.log(params);
   const currentUserId = useSelector(getCurrentUserId());
-  console.log(currentUserId);
   return (
     <>
       <UsersLoader>
